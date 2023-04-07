@@ -1,14 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import restaurants from "./api/restaurants.route.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`The server is running on port: ${port}`);
-});
+app.use("/api/v1/restaurants", restaurants);
+app.use("*", (req, res) => res.status(404).json({ err: "Wrong Route" }));
+
+export default app;
