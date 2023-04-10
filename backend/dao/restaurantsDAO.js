@@ -1,19 +1,17 @@
+import { ObjectId } from "mongodb";
+
 let restaurants;
 
-export default class RestaurantDAO {
+export default class RestaurantsDAO {
   static async injectDB(conn) {
     if (restaurants) {
       return;
     }
 
     try {
-      restaurants = await conn
-        .db(process.env.RESTREVIEWS_NS)
-        .collection("restaurants");
+      restaurants = await conn.db(process.env.RESTREVIEWS_NS).collection("restaurants");
     } catch (err) {
-      console.log(
-        `Unable to establish a connection handle in restaurantsDAO: ${err}`
-      );
+      console.log(`Unable to establish a connection handle in restaurantsDAO: ${err}`);
     }
   }
 
@@ -39,9 +37,7 @@ export default class RestaurantDAO {
       return { restaurantsList: [], totalNumRestaurants: 0 };
     }
 
-    const displayCursor = cursor
-      .limit(restaurantsPerPage)
-      .skip(restaurantsPerPage * page);
+    const displayCursor = cursor.limit(restaurantsPerPage).skip(restaurantsPerPage * page);
 
     try {
       const restaurantsList = await displayCursor.toArray();
@@ -49,10 +45,65 @@ export default class RestaurantDAO {
 
       return { restaurantsList, totalNumRestaurants };
     } catch (err) {
-      console.log(
-        `Unable to convert cursor to array or problem with counting documents: ${err}`
-      );
+      console.log(`Unable to convert cursor to array or problem with counting documents: ${err}`);
       return { restaurantsList: [], totalNumRestaurants: 0 };
+    }
+  }
+
+  static async getRestaurantById(id) {
+    try {
+      const pipeline = [
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: "reviews",
+            let: {
+              id: "$_id",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$restaurant_id", "$$id"],
+                  },
+                },
+              },
+              {
+                $sort: {
+                  date: -1,
+                },
+              },
+            ],
+            as: "reviews",
+          },
+        },
+        {
+          $addFields: {
+            reviews: "$reviews",
+          },
+        },
+      ];
+
+      return await restaurants.aggregate(pipeline).next();
+    } catch (err) {
+      console.log(`Something went wrong in getRestaurantById: ${err}`);
+      throw err;
+    }
+  }
+
+  static async getCuisines() {
+    let cuisines = [];
+
+    try {
+      cuisines = await restaurants.distinct("cuisine");
+      return cuisines;
+    } catch (err) {
+      console.error(`Something went wrong in getCuisines: ${err}`);
+      throw err;
     }
   }
 }

@@ -19,7 +19,7 @@ export default class ReviewDAO {
         name: user.name,
         date: date,
         text: review,
-        restaurantId: new ObjectId(restaurantId),
+        restaurant_id: new ObjectId(restaurantId),
       };
 
       return await reviews.insertOne(reviewDoc);
