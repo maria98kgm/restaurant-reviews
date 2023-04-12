@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 // down is one of the ways to import bootstrap
 // import "./App.scss";
 // import * as bootstrap from "bootstrap";
