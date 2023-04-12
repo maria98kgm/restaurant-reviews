@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RestaurantDataService from "../services/restaurant";
 
-function RestaurantsList() {
+const RestaurantsList = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [searchName, setSearchName] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [searchCuisine, setSearchCuisine] = useState("");
   const [cuisines, setCuisines] = useState(["All Cuisines"]);
+  const [page, setPage] = useState(0);
+  const [maxPage, setMaxPage] = useState(0);
+  const [currentSearch, setCurrentSearch] = useState(["name", ""]);
 
   useEffect(() => {
     retrieveRestaurants();
@@ -32,6 +35,9 @@ function RestaurantsList() {
   const retrieveRestaurants = () => {
     RestaurantDataService.getAll()
       .then((response) => {
+        const totalPages = Math.floor(response.data.total_results / response.data.entries_per_page);
+        setPage(0);
+        setMaxPage(totalPages);
         setRestaurants(response.data.restaurants);
       })
       .catch((err) => {
@@ -53,9 +59,12 @@ function RestaurantsList() {
     retrieveRestaurants();
   };
 
-  const find = (query, by) => {
-    RestaurantDataService.find(query, by)
+  const find = (query, by, page, doNotSetPage) => {
+    RestaurantDataService.find(query, by, page)
       .then((response) => {
+        const totalPages = Math.floor(response.data.total_results / response.data.entries_per_page);
+        if (!doNotSetPage) setPage(0);
+        setMaxPage(totalPages);
         setRestaurants(response.data.restaurants);
       })
       .catch((err) => {
@@ -65,17 +74,37 @@ function RestaurantsList() {
 
   const findByName = () => {
     find(searchName, "name");
+    setCurrentSearch(["name", searchName]);
   };
 
   const findByZip = () => {
     find(searchZip, "zipcode");
+    setCurrentSearch(["zipcode", searchZip]);
   };
 
   const findByCuisine = () => {
     if (searchCuisine == "All Cuisines") {
       refreshList();
+      setCurrentSearch(["name", ""]);
     } else {
       find(searchCuisine, "cuisine");
+      setCurrentSearch(["cuisine", searchCuisine]);
+    }
+  };
+
+  const pagLeft = () => {
+    if (page > 0) {
+      const newPage = page - 1;
+      setPage(newPage);
+      find(currentSearch[1], currentSearch[0], newPage, true);
+    }
+  };
+
+  const pagRight = () => {
+    if (page < maxPage) {
+      const newPage = page + 1;
+      setPage(newPage);
+      find(currentSearch[1], currentSearch[0], newPage, true);
     }
   };
 
@@ -122,10 +151,18 @@ function RestaurantsList() {
         </div>
       </div>
       <div className="container mb-4" style={{ display: "flex", justifyContent: "space-between" }}>
-        <button type="button" class="btn btn-primary">
+        <button
+          type="button"
+          className={`btn btn-primary ${page === 0 ? "disabled" : ""}`}
+          onClick={pagLeft}
+        >
           <i className="bi bi-arrow-return-left" />
         </button>
-        <button type="button" class="btn btn-primary">
+        <button
+          type="button"
+          className={`btn btn-primary ${page === maxPage ? "disabled" : ""}`}
+          onClick={pagRight}
+        >
           <i className="bi bi-arrow-return-right" />
         </button>
       </div>
@@ -167,6 +204,6 @@ function RestaurantsList() {
       </div>
     </div>
   );
-}
+};
 
 export default RestaurantsList;
