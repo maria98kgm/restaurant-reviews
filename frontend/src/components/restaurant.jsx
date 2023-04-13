@@ -87,12 +87,8 @@ const Restaurant = (props) => {
                               Delete
                             </a>
                             <Link
-                              to={{
-                                pathname: "/restaurants/" + id + "/review",
-                                state: {
-                                  currentReview: review,
-                                },
-                              }}
+                              to={"/restaurants/" + id + "/review"}
+                              state={{ currentReview: review }}
                               className="btn btn-primary col-lg-5 mx-1 mb-1"
                             >
                               Edit
