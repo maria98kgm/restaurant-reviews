@@ -22,7 +22,7 @@ class RestaurantDataService {
   }
 
   deleteReview(id, userId) {
-    return http.delete(`/review?review_id=${id}`, { user_id: userId });
+    return http.delete(`/review?review_id=${id}`, { data: { user_id: userId } });
   }
 
   getCuisines() {

@@ -13,6 +13,10 @@ import Login from "./components/login";
 function App() {
   const [user, setUser] = useState(null);
 
+  const login = (user = null) => {
+    setUser(user);
+  };
+
   const logout = () => {
     setUser(null);
   };
@@ -51,7 +55,7 @@ function App() {
           <Route path="/restaurants" element={<RestaurantsList />} />
           <Route path="/restaurants/:id/review" element={<AddReview user={user} />} />
           <Route path="/restaurants/:id" element={<Restaurant user={user} />} />
-          <Route path="/login" element={<Login user={user} />} />
+          <Route path="/login" element={<Login user={user} login={login} />} />
         </Routes>
       </div>
     </div>

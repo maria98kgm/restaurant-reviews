@@ -27,13 +27,17 @@ const Restaurant = (props) => {
       });
   };
 
-  const deleteReview = (reviewId, index) => {
+  const deleteReview = (reviewId) => {
     RestaurantDataService.deleteReview(reviewId, props.user.id)
       .then(() => {
         setRestaurant((prevState) => {
-          prevState.reviews.splice(index, 1);
+          const reviewIndex = prevState.reviews.findIndex((item) => item._id === reviewId);
+          const newReviews = [...prevState.reviews];
+          newReviews.splice(reviewIndex, 1);
+
           return {
             ...prevState,
+            reviews: newReviews,
           };
         });
       })
@@ -57,12 +61,12 @@ const Restaurant = (props) => {
           <Link to={"/restaurants/" + id + "/review"} className="btn btn-primary">
             Add Review
           </Link>
-          <h4> Reviews </h4>
+          <h4 style={{ marginTop: "2rem" }}> Reviews </h4>
           <div className="row">
             {restaurant.reviews.length > 0 ? (
-              restaurant.reviews.map((review, index) => {
+              restaurant.reviews.map((review) => {
                 return (
-                  <div className="col-lg-4 pb-1" key={index}>
+                  <div className="col-lg-4 pb-1" key={review._id}>
                     <div className="card">
                       <div className="card-body">
                         <p className="card-text">
@@ -77,7 +81,7 @@ const Restaurant = (props) => {
                         {props.user && props.user.id === review.user_id && (
                           <div className="row">
                             <a
-                              onClick={() => deleteReview(review._id, index)}
+                              onClick={() => deleteReview(review._id)}
                               className="btn btn-primary col-lg-5 mx-1 mb-1"
                             >
                               Delete
