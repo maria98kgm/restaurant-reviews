@@ -2,27 +2,27 @@ import http from "../http-common.js";
 
 class RestaurantDataService {
   getAll(page = 0) {
-    return http.get(`?page=${page}`);
+    return http.get(`restaurants?page=${page}`);
   }
 
   get(id) {
-    return http.get(`/id/${id}`);
+    return http.get(`/restaurant?id=${id}`);
   }
 
   find(query, by = "name", page = 0) {
-    return http.get(`?${by}=${query}&page=${page}`);
+    return http.get(`restaurants?${by}=${query}&page=${page}`);
   }
 
   createReview(data) {
-    return http.post("/review", data);
+    return http.post("/review_new", data);
   }
 
   updateReview(data) {
-    return http.put("/review", data);
+    return http.put("/review_update", data);
   }
 
-  deleteReview(id, userId) {
-    return http.delete(`/review?review_id=${id}`, { data: { user_id: userId } });
+  deleteReview(id) {
+    return http.delete(`/review_delete?review_id=${id}`);
   }
 
   getCuisines() {

@@ -28,7 +28,7 @@ const Restaurant = (props) => {
   };
 
   const deleteReview = (reviewId) => {
-    RestaurantDataService.deleteReview(reviewId, props.user.id)
+    RestaurantDataService.deleteReview(reviewId)
       .then(() => {
         setRestaurant((prevState) => {
           const reviewIndex = prevState.reviews.findIndex((item) => item._id === reviewId);
