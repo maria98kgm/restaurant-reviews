@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 // down is one of the ways to import bootstrap
-// import "./App.scss";
+import "./App.scss";
 // import * as bootstrap from "bootstrap";
 import { Routes, Route, Link, Navigate, Outlet } from "react-router-dom";
 import RestaurantsList from "./components/restaurantsList";
@@ -24,31 +25,43 @@ function App() {
   return (
     <div className="App">
       <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
-        <div className="container-fluid">
+        <div className="container">
           <a className="navbar-brand" href="/restaurants">
             Restaurant Reviews
           </a>
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link className="nav-link" to="/restaurants">
-                Restaurants
-              </Link>
-            </li>
-            <li className="nav-item">
-              {user ? (
-                <a onClick={logout} className="nav-link" style={{ cursor: "pointer" }}>
-                  Logout {user.name}
-                </a>
-              ) : (
-                <Link className="nav-link" to="/login">
-                  Login
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav align-items-center">
+              <li className="nav-item">
+                <Link className="nav-link" to="/restaurants">
+                  Restaurants
                 </Link>
-              )}
-            </li>
-          </ul>
+              </li>
+              <li className="nav-item">
+                {user ? (
+                  <a onClick={logout} className="nav-link" style={{ cursor: "pointer" }}>
+                    <button className="btn btn-primary">Logout {user.name}</button>
+                  </a>
+                ) : (
+                  <Link className="nav-link" to="/login">
+                    <button className="btn btn-primary">Login</button>
+                  </Link>
+                )}
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
-
       <div className="container mt-3">
         <Routes>
           <Route path="/" element={<Navigate to="/restaurants" />} />

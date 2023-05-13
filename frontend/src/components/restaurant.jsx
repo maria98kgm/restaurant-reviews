@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import RestaurantDataService from "../services/restaurant";
+import Loader from "./loader";
 
 const Restaurant = (props) => {
   const initialRestaurantState = {
@@ -11,6 +12,7 @@ const Restaurant = (props) => {
     reviews: [],
   };
   const [restaurant, setRestaurant] = useState(initialRestaurantState);
+  const [loading, setLoading] = useState(true);
   let { id } = useParams();
 
   useEffect(() => {
@@ -24,6 +26,9 @@ const Restaurant = (props) => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -47,36 +52,55 @@ const Restaurant = (props) => {
   };
 
   return (
-    <div>
-      {restaurant ? (
+    <div className="mt-5">
+      {loading ? (
+        <Loader />
+      ) : restaurant ? (
         <div>
-          <h5>{restaurant.name}</h5>
-          <p>
+          <h4
+            style={{ width: "fit-content" }}
+            className="mb-4 border-start border-bottom border-primary border-2 p-2 pt-0"
+          >
+            {restaurant.name}
+          </h4>
+          <p className="mb-2">
             <strong>Cuisine: </strong>
             {restaurant.cuisine}
-            <br />
+          </p>
+          <p className="mb-2">
             <strong>Address: </strong>
             {restaurant.address.building} {restaurant.address.street}, {restaurant.address.zipcode}
+          </p>
+          <p className="mb-4">
+            <strong>Borough: </strong>
+            {restaurant.borough}
           </p>
           <Link to={"/restaurants/" + id + "/review"} className="btn btn-primary">
             Add Review
           </Link>
-          <h4 style={{ marginTop: "2rem" }}> Reviews </h4>
+          <h5 style={{ fontSize: "1.4rem" }} className="mt-5 mb-4">
+            {" "}
+            Reviews{" "}
+          </h5>
           <div className="row">
             {restaurant.reviews.length > 0 ? (
               restaurant.reviews.map((review) => {
                 return (
                   <div className="col-lg-4 pb-1" key={review._id}>
-                    <div className="card">
-                      <div className="card-body">
+                    <div className="card h-100">
+                      <div className="card-body d-flex flex-column justify-content-between">
+                        <p className="card-title">{review.text}</p>
                         <p className="card-text">
-                          {review.text}
+                          <strong>Date: </strong>
+                          {new Date(review.date).toLocaleDateString("en-us", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
                           <br />
                           <strong>User: </strong>
                           {review.name}
-                          <br />
-                          <strong>Date: </strong>
-                          {review.date}
                         </p>
                         {props.user && props.user.id === review.user_id && (
                           <div className="row">
