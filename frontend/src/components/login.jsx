@@ -21,13 +21,13 @@ const Login = (props) => {
   };
 
   return (
-    <div className="submit-form" style={{ maxWidth: "400px" }}>
+    <div className="submit-form" style={{ maxWidth: "380px" }}>
       <div>
-        <div className="form-group">
+        <div className="form-group mb-3">
           <label htmlFor="user">Username</label>
           <input
             type="text"
-            className="form-control"
+            className="form-control mt-1"
             id="name"
             required
             value={user.name}
@@ -40,7 +40,7 @@ const Login = (props) => {
           <label htmlFor="id">ID</label>
           <input
             type="text"
-            className="form-control"
+            className="form-control mt-1"
             id="id"
             required
             value={user.id}

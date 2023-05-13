@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import RestaurantDataService from "../services/restaurant";
+import Loader from "./loader";
 
 const RestaurantsList = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -178,7 +179,7 @@ const RestaurantsList = () => {
       </div>
       <div className="row justify-content-center">
         {loading ? (
-          <p className="text-center fs-3 mt-5">Loading...</p>
+          <Loader />
         ) : restaurants.length ? (
           restaurants.map((restaurant) => {
             const address = `${restaurant.address.building} ${restaurant.address.street}, ${restaurant.address.zipcode}`;
