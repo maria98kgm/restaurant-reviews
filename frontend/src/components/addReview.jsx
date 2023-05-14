@@ -51,7 +51,7 @@ const AddReview = (props) => {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "380px" }}>
       {props.user ? (
         <div className="submit-form">
           {submitted ? (
@@ -67,7 +67,7 @@ const AddReview = (props) => {
                 <label htmlFor="description">{editing ? "Edit" : "Create"} Review</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control mt-1"
                   id="text"
                   required
                   value={review}
