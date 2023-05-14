@@ -87,8 +87,8 @@ const Restaurant = (props) => {
               restaurant.reviews.map((review) => {
                 return (
                   <div className="col-lg-4 pb-1" key={review._id}>
-                    <div className="card h-100">
-                      <div className="card-body d-flex flex-column justify-content-between">
+                    <div className="card">
+                      <div className="card-body">
                         <p className="card-title">{review.text}</p>
                         <p className="card-text">
                           <strong>Date: </strong>
