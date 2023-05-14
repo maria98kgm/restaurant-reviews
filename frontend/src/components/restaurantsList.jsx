@@ -74,20 +74,26 @@ const RestaurantsList = () => {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   const findByName = () => {
+    setLoading(true);
     find(searchName, "name");
     setCurrentSearch(["name", searchName]);
   };
 
   const findByZip = () => {
+    setLoading(true);
     find(searchZip, "zipcode");
     setCurrentSearch(["zipcode", searchZip]);
   };
 
   const findByCuisine = () => {
+    setLoading(true);
     if (searchCuisine == "All Cuisines") {
       refreshList();
       setCurrentSearch(["name", ""]);
@@ -98,6 +104,7 @@ const RestaurantsList = () => {
   };
 
   const pagLeft = () => {
+    setLoading(true);
     if (page > 0) {
       const newPage = page - 1;
       setPage(newPage);
@@ -106,6 +113,7 @@ const RestaurantsList = () => {
   };
 
   const pagRight = () => {
+    setLoading(true);
     if (page < maxPage) {
       const newPage = page + 1;
       setPage(newPage);
